@@ -13,7 +13,6 @@ class NewsApiProvider implements Source {
       Uri.parse("$_root/topstories.json?print=pretty"),
     );
     final ids = json.decode(response.body);
-    print("Fetch all top ids..");
     return ids.cast<int>(); //Future with list
   }
 

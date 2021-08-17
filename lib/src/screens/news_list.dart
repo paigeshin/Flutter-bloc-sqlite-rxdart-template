@@ -9,7 +9,7 @@ class NewsList extends StatelessWidget {
     final bloc = StoriesProvider.of(context);
     // THIS IS BAD!!!! DONT DO THIS!
     // TEMPORARY!
-    bloc.fetchTopIds();
+    // We moved it to Routes
     return Scaffold(
       appBar: AppBar(
         title: Text('Top News'),

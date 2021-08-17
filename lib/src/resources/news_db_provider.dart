@@ -23,8 +23,8 @@ class NewsDbProvider implements Source, Cache {
       version: 1,
       onCreate: (Database newDb, int version) async {
         await newDb.execute("""
-          CREATE TABLE items
-          (
+            CREATE TABLE items
+            (
             id INTEGER PRIMARY KEY, 
             type TEXT, 
             text TEXT,

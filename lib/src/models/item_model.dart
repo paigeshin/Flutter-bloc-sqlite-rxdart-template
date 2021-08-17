@@ -16,34 +16,34 @@ class ItemModel {
   final int descendants;
 
   ItemModel.fromJson(Map<String, dynamic> parsedJSON)
-      : id = parsedJSON['id'],
+      : id = parsedJSON['id'] ?? -1,
         deleted = parsedJSON['deleted'] ?? false,
         type = parsedJSON['type'] ?? false,
-        by = parsedJSON['by'],
-        time = parsedJSON['time'],
+        by = parsedJSON['by'] ?? "",
+        time = parsedJSON['time'] ?? -1,
         text = parsedJSON['text'] ?? "",
         dead = parsedJSON['dead'] ?? false,
         parent = parsedJSON['parent'] ?? -1,
         kids = parsedJSON['kids'] ?? [],
         url = parsedJSON['url'] ?? "",
-        score = parsedJSON['score'],
-        title = parsedJSON['title'],
+        score = parsedJSON['score'] ?? -1,
+        title = parsedJSON['title'] ?? "",
         descendants = parsedJSON['descendants'] ?? 0;
 
   ItemModel.fromDb(Map<String, dynamic> parsedJSON)
       : id = parsedJSON['id'],
         deleted = 1 == 1, //if deleted is 1 or not, return boolean
         type = parsedJSON['type'] ?? false,
-        by = parsedJSON['by'],
-        time = parsedJSON['time'],
+        by = parsedJSON['by'] ?? "",
+        time = parsedJSON['time'] ?? -1,
         text = parsedJSON['text'] ?? "",
         dead = parsedJSON['dead'] == 1, // map dead value to boolean
         parent = parsedJSON['parent'] ?? -1,
         kids = jsonDecode(parsedJSON['kids']) ??
             [], // This `blob` big arbitrary data
         url = parsedJSON['url'] ?? "",
-        score = parsedJSON['score'],
-        title = parsedJSON['title'],
+        score = parsedJSON['score'] ?? "",
+        title = parsedJSON['title'] ?? "",
         descendants = parsedJSON['descendants'] ?? 0;
 
   //toMap for DB
