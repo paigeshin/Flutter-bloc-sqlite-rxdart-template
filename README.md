@@ -549,77 +549,45 @@ class LoadingContainer extends StatelessWidget {
 - NewsList (page)
 
 ```dart
-import 'dart:async';
-import 'package:flutter/material.dart';
-import '../blocs/comments_provider.dart';
-import '../models/item_model.dart';
-import '../widgets/comment.dart';
-
-class NewsDetail extends StatelessWidget {
-  final int itemId;
-
-  NewsDetail({this.itemId});
-
-  Widget build(context) {
-    final bloc = CommentsProvider.of(context);
-
+class NewsList extends StatelessWidget {
+  Widget build(BuildContext context) {
+    final bloc = StoriesProvider.of(context);
+    // THIS IS BAD!!!! DONT DO THIS!
+    // TEMPORARY!
+    // We moved it to Routes
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail'),
+        title: Text('Top News'),
       ),
-      body: buildBody(bloc),
+      body: buildList(bloc),
     );
   }
 
-  Widget buildBody(CommentsBloc bloc) {
+  Widget buildList(StoriesBloc bloc) {
     return StreamBuilder(
-      stream: bloc.itemWithComments,
-      builder: (context, AsyncSnapshot<Map<int, Future<ItemModel>>> snapshot) {
+      stream: bloc.topIds,
+      builder: (context, AsyncSnapshot<List<int>> snapshot) {
         if (!snapshot.hasData) {
-          return Text('Loading');
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
-
-        final itemFuture = snapshot.data[itemId];
-
-        return FutureBuilder(
-          future: itemFuture,
-          builder: (context, AsyncSnapshot<ItemModel> itemSnapshot) {
-            if (!itemSnapshot.hasData) {
-              return Text('Loading');
-            }
-
-            return buildList(itemSnapshot.data, snapshot.data);
-          },
+        return Refresh(
+          child: ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, int index) {
+              var itemId = -1;
+              if (snapshot.hasData) {
+                itemId = snapshot.data![index];
+                bloc.fetchItem(itemId);
+              }
+              return NewsListTile(
+                itemId: itemId,
+              );
+            },
+          ),
         );
       },
-    );
-  }
-
-  Widget buildList(ItemModel item, Map<int, Future<ItemModel>> itemMap) {
-    final children = <Widget>[];
-    children.add(buildTitle(item));
-    final commentsList = item.kids.map((kidId) {
-      return Comment(itemId: kidId, itemMap: itemMap, depth: 0);
-    }).toList();
-    children.addAll(commentsList);
-
-    return ListView(
-      children: children,
-    );
-  }
-
-  Widget buildTitle(ItemModel item) {
-    return Container(
-      margin: EdgeInsets.all(10.0),
-      alignment: Alignment.topCenter,
-      child: Text(
-        item.title,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
     );
   }
 }
